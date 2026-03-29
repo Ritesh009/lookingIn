@@ -471,7 +471,7 @@ try{
   });
 
   // Animate hit number
-  let hitStarted = false;
+  let hitStarted = false; var extTotal = window.__extData ? window.__extData.totalBlocked : null;
   new IntersectionObserver(([e]) => {
     if (e.isIntersecting && !hitStarted) {
       hitStarted = true;
