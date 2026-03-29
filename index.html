@@ -644,3 +644,31 @@
 
 </body>
 </html>
+<script>
+(function(){
+  var hash = window.location.hash;
+  if(!hash||hash.indexOf("data=")<0) return;
+  try{
+    var data = JSON.parse(atob(hash.split("data=")[1]));
+    if(!data||!data.source) return;
+    var el = document.getElementById("hitNum");
+    if(el) el.textContent = data.totalBlocked || 0;
+    var sub = document.querySelector(".hit-sub");
+    if(sub) sub.textContent = "Across "+data.sitesVisited+" websites you visited.";
+    var tl = document.getElementById("trackerList");
+    if(tl && data.trackers && data.trackers.length){
+      tl.innerHTML="";
+      var max=data.trackers[0].count||1;
+      var C={"Google":"#ff4e4e","Meta":"#4ea8ff","TikTok":"#ff6eb4","Microsoft":"#00aaff","Other":"#7a8799"};
+      data.trackers.forEach(function(t,i){
+        var col=C[t.company]||"#7a8799";
+        var pct=Math.round(t.count/max*100);
+        var div=document.createElement("div");
+        div.className="tracker-card";
+        div.innerHTML='<span class="t-rank">'+(i+1)+'</span><span class="t-dot" style="background:'+col+'"></span><div class="t-info"><div class="t-name">'+t.company+'</div><div class="t-domain">'+t.count+' requests / '+t.sites+' sites</div></div><div class="t-bar-wrap"><div class="t-bar-track"><div class="t-bar-fill" style="width:'+pct+'%;background:'+col+'"></div></div></div>';
+        tl.appendChild(div);
+      });
+    }
+  }catch(e){console.log("bridge error",e);}
+})();
+</script>
