@@ -1,82 +1,45 @@
-// LookingIn popup.js v1.2
-var COLORS = { Google: “#ff4e4e”, Meta: “#4ea8ff”, TikTok: “#ff6eb4”, Microsoft: “#00aaff”, LinkedIn: “#0a66c2”, Hotjar: “#ffc107”, Amazon: “#ff9900”, Other: “#7a8799” };
-var REPORT_URL = “https://ritesh009.github.io/LookingIn/”;
+// LookingIn popup.js
+var C = { Google: “#ff4e4e”, Meta: “#4ea8ff”, TikTok: “#ff6eb4”, Microsoft: “#00aaff”, LinkedIn: “#0a66c2”, Hotjar: “#ffc107”, Amazon: “#ff9900”, Other: “#7a8799” };
 
-function timeAgo(ts) {
+function ago(ts) {
 var d = Math.floor((Date.now() - ts) / 1000);
 if (d < 60) return d + “s ago”;
-if (d < 3600) return Math.floor(d / 60) + “m ago”;
-return Math.floor(d / 3600) + “h ago”;
+if (d < 3600) return Math.floor(d/60) + “m ago”;
+return Math.floor(d/3600) + “h ago”;
 }
 
-function render(stats) {
-var from = new Date(stats.start).toLocaleDateString(“en-US”, { month: “short”, day: “numeric” });
-var to = new Date().toLocaleDateString(“en-US”, { month: “short”, day: “numeric” });
-document.getElementById(“dateRange”).textContent = from + “ - “ + to;
-var hitEl = document.getElementById(“hitNum”);
-
-if (!stats.total) {
-hitEl.textContent = “0”;
-document.getElementById(“hitLabel”).textContent = “trackers detected”;
-document.getElementById(“hitSub”).style.display = “none”;
-document.getElementById(“content”).innerHTML = “<div class="empty"><div class="empty-icon">👁</div><div class="empty-title">LookingIn is watching</div><div class="empty-body">Browse normally and trackers will appear here.</div></div>”;
+chrome.runtime.sendMessage({ t: “get” }, function(s) {
+if (chrome.runtime.lastError || !s) {
+document.getElementById(“num”).textContent = “ERR”;
+document.getElementById(“body”).textContent = chrome.runtime.lastError ? chrome.runtime.lastError.message : “no response”;
 return;
 }
 
-var n = 0;
-var step = Math.max(1, Math.floor(stats.total / 30));
-var timer = setInterval(function() { n = Math.min(n + step, stats.total); hitEl.textContent = n; if (n >= stats.total) clearInterval(timer); }, 20);
-document.getElementById(“sitesNum”).textContent = stats.sites;
+document.getElementById(“num”).textContent = s.n || 0;
+document.getElementById(“sites”).textContent = s.s || 0;
 
 var html = “”;
-if (stats.trackers.length > 0) {
-var max = stats.trackers[0].count;
-html += “<div class="section-label">Who is watching</div>”;
-for (var i = 0; i < Math.min(stats.trackers.length, 5); i++) {
-var t = stats.trackers[i];
-var color = COLORS[t.company] || COLORS.Other;
-var pct = Math.round((t.count / max) * 100);
-html += “<div class="tracker-row"><span class="t-dot" style="background:” + color + “"></span><span class="t-name">” + t.company + “</span><div class="t-bar-wrap"><div class="t-bar-track"><div class="t-bar-fill" id="bar” + i + “" style="width:0%;background:” + color + “"></div></div><div class="t-count">” + t.count + “x - “ + t.sites + “ site” + (t.sites !== 1 ? “s” : “”) + “</div></div></div>”;
+for (var i = 0; i < s.list.length && i < 5; i++) {
+var t = s.list[i];
+var col = C[t.company] || C.Other;
+html += “<div class=row><span class=dot style=background:” + col + “></span><span class=name>” + t.company + “</span><span class=cnt>” + t.count + “x / “ + t.sites + “ sites</span></div>”;
+}
+if (s.h && s.h.length) {
+html += “<div class=label>Recent</div>”;
+for (var j = 0; j < s.h.length && j < 4; j++) {
+html += “<div class=row><span class=co>” + s.h[j].c + “</span><span class=pg>” + s.h[j].p + “</span><span class=tm>” + ago(s.h[j].t) + “</span></div>”;
 }
 }
-if (stats.history && stats.history.length > 0) {
-html += “<div class="divider"></div><div class="section-label">Just now</div>”;
-for (var j = 0; j < Math.min(stats.history.length, 4); j++) {
-var h = stats.history[j];
-html += “<div class="recent-row"><span class="r-company">” + h.company + “</span><span class="r-page">” + h.page + “</span><span class="r-time">” + timeAgo(h.time) + “</span></div>”;
-}
-}
-document.getElementById(“content”).innerHTML = html;
+document.getElementById(“body”).innerHTML = html || “<div class=empty>Browse normally to see trackers</div>”;
 
-setTimeout(function() {
-for (var k = 0; k < Math.min(stats.trackers.length, 5); k++) {
-(function(idx) {
-setTimeout(function() {
-var bar = document.getElementById(“bar” + idx);
-if (bar) bar.style.width = Math.round((stats.trackers[idx].count / stats.trackers[0].count) * 100) + “%”;
-}, idx * 60);
-})(k);
-}
-}, 50);
-}
-
-chrome.runtime.sendMessage({ type: “GET” }, function(stats) {
-if (chrome.runtime.lastError || !stats) {
-document.getElementById(“hitNum”).textContent = “!”;
-document.getElementById(“content”).innerHTML = “<div class="empty"><div class="empty-title">Error</div><div class="empty-body">” + (chrome.runtime.lastError ? chrome.runtime.lastError.message : “No response”) + “</div></div>”;
-return;
-}
-render(stats);
-document.getElementById(“reportBtn”).addEventListener(“click”, function() {
-var payload = { totalBlocked: stats.total, sitesVisited: stats.sites, startDate: stats.start, trackers: stats.trackers, history: stats.history, source: “extension” };
-chrome.tabs.create({ url: REPORT_URL + “#data=” + btoa(JSON.stringify(payload)) });
+document.getElementById(“report”).onclick = function() {
+var url = “https://ritesh009.github.io/LookingIn/#data=” + btoa(JSON.stringify({ totalBlocked: s.n, sitesVisited: s.s, startDate: s.ts, trackers: s.list, history: s.h, source: “extension” }));
+chrome.tabs.create({ url: url });
 window.close();
-});
+};
 });
 
-document.getElementById(“resetBtn”).addEventListener(“click”, function() {
-if (!confirm(“Reset all data?”)) return;
-chrome.runtime.sendMessage({ type: “RESET” }, function() {
-chrome.runtime.sendMessage({ type: “GET” }, render);
-});
-});
+document.getElementById(“reset”).onclick = function() {
+if (!confirm(“Reset?”)) return;
+chrome.runtime.sendMessage({ t: “reset” }, function() { location.reload(); });
+};
