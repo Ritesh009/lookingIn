@@ -476,7 +476,7 @@ try{
     if (e.isIntersecting && !hitStarted) {
       hitStarted = true;
       let n = 0; const el = document.getElementById('hitNum');
-      const t = setInterval(() => { el.textContent = (n = Math.min(n+2,128)); if(n>=128) clearInterval(t); }, 16);
+      const t = setInterval(() => { el.textContent = (n = Math.min(n+2, extTotal||128)); if(n>=(extTotal||128)) clearInterval(t); }, 16);
     }
   }, {threshold:0.3}).observe(document.getElementById('s1'));
 
