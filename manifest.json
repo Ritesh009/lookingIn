@@ -1,24 +1,45 @@
 {
+  "manifest_version": 3,
   "name": "LookingIn",
-  "short_name": "LookingIn",
-  "description": "See who's tracking you — and how to stop it.",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#080a0f",
-  "theme_color": "#080a0f",
-  "orientation": "portrait-primary",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+  "version": "1.0.0",
+  "description": "See who's tracking you — in real time.",
+
+  "icons": {
+    "16":  "icons/icon-16.png",
+    "32":  "icons/icon-32.png",
+    "48":  "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16":  "icons/icon-16.png",
+      "32":  "icons/icon-32.png",
+      "48":  "icons/icon-48.png",
+      "128": "icons/icon-128.png"
     },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+    "default_title": "LookingIn — see who's tracking you"
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "permissions": [
+    "webRequest",
+    "storage",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "lookingin@extension",
+      "strict_min_version": "109.0"
     }
-  ]
+  }
 }
