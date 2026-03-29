@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -6,150 +7,237 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg: #080a0f;
-      --card: #10141c;
-      --border: rgba(255,255,255,0.07);
-      --green: #3ddc84;
-      --red: #ff4e4e;
-      --yellow: #ffc107;
-      --muted: #5a6a7a;
-      --text: #dde6f0;
-    }
+```
+:root {
+  --bg: #080a0f;
+  --card: #10141c;
+  --card2: #161d28;
+  --border: rgba(255,255,255,0.07);
+  --green: #3ddc84;
+  --red: #ff4e4e;
+  --yellow: #ffc107;
+  --muted: #5a6a7a;
+  --text: #dde6f0;
+  --serif: Georgia, 'Times New Roman', serif;
+}
 
-    body {
-      width: 300px;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    }
+body {
+  width: 320px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+}
 
-    /* Header */
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.9rem 1rem 0.7rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-title { font-size: 0.9rem; font-weight: 700; flex: 1; }
-    .header-sub   { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
-    .reset-btn {
-      background: none; border: none; color: var(--muted);
-      font-size: 0.68rem; cursor: pointer; padding: 0.2rem 0.4rem;
-      border-radius: 6px; transition: color 0.15s;
-    }
-    .reset-btn:hover { color: var(--red); }
+/* ── HERO HIT ── */
+.hero {
+  padding: 1.2rem 1.2rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,78,78,0.07) 0%, transparent 70%);
+  position: relative;
+}
 
-    /* Stats row */
-    .stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      padding: 0.8rem 0.9rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .stat {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.6rem 0.7rem;
-    }
-    .stat-num   { font-size: 1.6rem; font-weight: 800; line-height: 1; color: var(--red); letter-spacing: -0.03em; }
-    .stat-label { font-size: 0.65rem; color: var(--muted); margin-top: 3px; }
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.logo-wrap { display: flex; align-items: center; gap: 0.45rem; }
+.logo-name { font-size: 0.78rem; font-weight: 700; letter-spacing: -0.01em; }
+.date-badge {
+  font-size: 0.62rem; color: var(--muted);
+  background: var(--card); border: 1px solid var(--border);
+  padding: 0.18rem 0.5rem; border-radius: 10px;
+}
+.reset-btn {
+  background: none; border: none; color: var(--muted);
+  font-size: 0.65rem; cursor: pointer; padding: 0.2rem 0.4rem;
+  border-radius: 6px; transition: color 0.15s; font-family: inherit;
+}
+.reset-btn:hover { color: var(--red); }
 
-    /* Tracker list */
-    .section-label {
-      font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--muted);
-      padding: 0.6rem 0.9rem 0.3rem;
-    }
-    .tracker-row {
-      display: flex; align-items: center; gap: 0.6rem;
-      padding: 0.45rem 0.9rem;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-      transition: background 0.1s;
-    }
-    .tracker-row:hover { background: var(--card); }
-    .t-dot  { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .t-name { font-size: 0.78rem; font-weight: 600; flex: 1; }
-    .t-meta { font-size: 0.68rem; color: var(--muted); text-align: right; line-height: 1.4; }
+.hit-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.8rem;
+}
+.hit-number {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--red);
+  font-family: var(--serif);
+  text-shadow: 0 0 40px rgba(255,78,78,0.3);
+}
+.hit-label-wrap { padding-bottom: 0.4rem; }
+.hit-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+.hit-sub {
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
 
-    /* Recent activity */
-    .activity-row {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.35rem 0.9rem;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-    }
-    .a-company { font-size: 0.72rem; font-weight: 600; color: var(--red); flex-shrink: 0; width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .a-page    { font-size: 0.7rem; color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .a-time    { font-size: 0.62rem; color: var(--muted); flex-shrink: 0; }
+/* Live pulse */
+.live-dot {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--red);
+  margin-top: 0.7rem;
+}
+.live-dot::before {
+  content: '';
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--red);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.3; transform:scale(1.6); }
+}
 
-    /* Footer */
-    .footer {
-      padding: 0.7rem 0.9rem;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .full-report-btn {
-      flex: 1;
-      background: var(--green);
-      color: #000;
-      font-weight: 700;
-      font-size: 0.75rem;
-      border: none;
-      border-radius: 20px;
-      padding: 0.45rem 1rem;
-      cursor: pointer;
-      font-family: inherit;
-      transition: opacity 0.15s;
-    }
-    .full-report-btn:hover { opacity: 0.88; }
+/* ── TRACKER LIST ── */
+.section-label {
+  font-size: 0.58rem; font-weight: 800; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  padding: 0.65rem 1rem 0.3rem;
+}
 
-    .empty {
-      padding: 1.2rem 0.9rem;
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.6;
-    }
-    .empty strong { color: var(--green); display: block; margin-bottom: 0.3rem; }
+.tracker-row {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.5rem 1rem;
+  transition: background 0.1s;
+  cursor: default;
+}
+.tracker-row:hover { background: var(--card); }
 
-    .loading {
-      padding: 1.5rem;
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
+.t-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.t-name { font-size: 0.8rem; font-weight: 700; flex: 1; }
+.t-bar-wrap { width: 50px; flex-shrink: 0; }
+.t-bar-track { height: 3px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+.t-bar-fill  { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(.22,1,.36,1); }
+.t-count { font-size: 0.68rem; color: var(--muted); text-align: right; margin-top: 2px; }
+
+/* ── RECENT ── */
+.recent-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.38rem 1rem;
+  border-top: 1px solid rgba(255,255,255,0.03);
+}
+.r-company {
+  font-size: 0.7rem; font-weight: 700; color: var(--red);
+  flex-shrink: 0; width: 65px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.r-page {
+  font-size: 0.68rem; color: var(--muted); flex: 1;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.r-time { font-size: 0.6rem; color: var(--muted); flex-shrink: 0; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 0; }
+
+/* ── FOOTER ── */
+.footer {
+  padding: 0.7rem 1rem;
+  display: flex; gap: 0.5rem; align-items: center;
+}
+.report-btn {
+  flex: 1; background: var(--green); color: #000;
+  font-weight: 800; font-size: 0.75rem; border: none;
+  border-radius: 20px; padding: 0.5rem 1rem;
+  cursor: pointer; font-family: inherit;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.01em;
+}
+.report-btn:hover  { opacity: 0.88; }
+.report-btn:active { transform: scale(0.97); }
+
+/* ── EMPTY STATE ── */
+.empty {
+  padding: 1.4rem 1rem 1rem;
+  text-align: center;
+}
+.empty-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+.empty-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--green); }
+.empty-body  { font-size: 0.74rem; color: var(--muted); line-height: 1.6; }
+
+/* ── CURRENT PAGE BANNER ── */
+.page-banner {
+  display: none;
+  align-items: center; gap: 0.5rem;
+  background: rgba(255,78,78,0.07);
+  border-bottom: 1px solid rgba(255,78,78,0.15);
+  padding: 0.45rem 1rem;
+  font-size: 0.7rem;
+}
+.page-banner.show { display: flex; }
+.page-banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: pulse 1.5s infinite; flex-shrink: 0; }
+.page-banner-text { flex: 1; color: var(--muted); }
+.page-banner-text strong { color: var(--red); }
+```
+
   </style>
 </head>
 <body>
 
-<div class="header">
-  <svg width="22" height="22" viewBox="0 0 40 40" fill="none">
-    <line x1="20" y1="7" x2="20" y2="15" stroke="#3ddc84" stroke-width="2.5" stroke-linecap="round"/>
-    <rect x="7" y="15" width="18" height="11" rx="3" fill="#3ddc84"/>
-    <circle cx="20" cy="20.5" r="3.5" fill="#080a0f" stroke="#3ddc84" stroke-width="1.2"/>
-    <circle cx="20" cy="20.5" r="1.4" fill="#3ddc84"/>
-    <circle cx="19.3" cy="19.8" r="0.5" fill="white" opacity="0.8"/>
-    <circle cx="11" cy="20.5" r="1.2" fill="#ff4e4e"/>
-    <path d="M25 17.5 L32 14 L32 27 L25 23.5 Z" fill="#3ddc84"/>
-    <rect x="17" y="5" width="6" height="3" rx="1.5" fill="#3ddc84"/>
-  </svg>
-  <div>
-    <div class="header-title">LookingIn</div>
-    <div class="header-sub" id="dateRange">Last 30 days</div>
+<!-- Header -->
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="logo-wrap">
+      <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
+        <line x1="20" y1="7" x2="20" y2="15" stroke="#3ddc84" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="7" y="15" width="18" height="11" rx="3" fill="#3ddc84"/>
+        <circle cx="20" cy="20.5" r="3.5" fill="#080a0f" stroke="#3ddc84" stroke-width="1.2"/>
+        <circle cx="20" cy="20.5" r="1.4" fill="#3ddc84"/>
+        <circle cx="19.3" cy="19.8" r="0.5" fill="white" opacity="0.8"/>
+        <circle cx="11" cy="20.5" r="1.2" fill="#ff4e4e"/>
+        <path d="M25 17.5 L32 14 L32 27 L25 23.5 Z" fill="#3ddc84"/>
+        <rect x="17" y="5" width="6" height="3" rx="1.5" fill="#3ddc84"/>
+      </svg>
+      <span class="logo-name">LookingIn</span>
+    </div>
+    <span class="date-badge" id="dateRange">—</span>
+    <button class="reset-btn" id="resetBtn">Reset</button>
   </div>
-  <button class="reset-btn" id="resetBtn" title="Reset all data">Reset</button>
+
+  <div class="hit-row">
+    <div class="hit-number" id="hitNum">—</div>
+    <div class="hit-label-wrap">
+      <div class="hit-label" id="hitLabel">trackers<br>watching you</div>
+      <div class="hit-sub" id="hitSub">across <span id="sitesNum">—</span> sites</div>
+    </div>
+  </div>
+  <div class="live-dot">Watching now</div>
 </div>
 
-<div id="content">
-  <div class="loading">Loading…</div>
+<!-- Current page banner -->
+
+<div class="page-banner" id="pageBanner">
+  <div class="page-banner-dot"></div>
+  <div class="page-banner-text">On this page: <strong id="pageTrackerCount">0</strong> tracker<span id="pageTrackerPlural">s</span> detected</div>
 </div>
 
+<!-- Dynamic content -->
+
+<div id="content"></div>
+
+<!-- Footer -->
+
+<div class="divider"></div>
 <div class="footer">
-  <button class="full-report-btn" id="reportBtn">View full report →</button>
+  <button class="report-btn" id="reportBtn">See full story →</button>
 </div>
 
 <script src="popup.js"></script>
+
 </body>
 </html>
